@@ -25,7 +25,7 @@ int main() {
     }
 
     
-    while (num_guesses < no_of_tries) {
+    while (num_guesses < total_no_of_tries) {
         printf("Guess a number between 1 and 100 (guesses remaining: %d): ", no_of_tries - num_guesses);
         scanf("%d", &guess);
         num_guesses++;
@@ -34,7 +34,7 @@ int main() {
             printf("Congratulations %s, you guessed the secret number in %d guesses!\n", name, num_guesses);
             if (num_guesses < high_score || high_score == 0) {
                 
-                high_score = num_guesses;
+                high_score = (no_of_tries-num_guesses)*10;
                 f = fopen("high_score.txt", "w");
                 fprintf(f, "%d", high_score);
                 fclose(f);

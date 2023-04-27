@@ -1,27 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
-#include<stdio.h> 
-#include<stdlib.h> 
-#include<time.h> 
-int main() 
-{ int rn,x,n=10,i,score; 
-time_t t; 
-srand((unsigned) time(&t)); 
-rn=rand() % 100; 
-for(i=1;i<=n;i++) 
-{ printf("\nGuess a no btw 1 and 100: "); 
-scanf("%d",&x); if(x!=rn) 
 
-{ printf("\nwrong\nno. of tries left=%d",(n-i)); 
 
-} if(x<rn)
- printf("\nyour guess is low\n"); 
- else if(x>rn) 
- printf("\nyour guess is high\n"); 
- if(x==rn) 
- { printf("\nsuccess"); 
- score=(n-i)*10; 
- printf("\nyour score is %d",score); 
- break; 
- } FILE *fp; 
- } 
- return 0; }
+int main() {
+    int number, guess, num_guesses = 0, high_score,no_of_tries=10;
+    char name[50];
+    FILE *f;
+    srand(time(NULL));
+    number = rand() % 100 + 1;
+
+    
+    printf("Enter your name: ");
+    scanf("%s",name);
+
+    
+    f = fopen("high_score.txt", "r");
+    if (f == NULL) {
+        high_score = 0;
+    } else {
+        fscanf(f, "%d", &high_score);
+        fclose(f);
+    }
+
+    
+    while (num_guesses < no_of_tries) {
+        printf("Guess a number between 1 and 100 (guesses remaining: %d): ", no_of_tries - num_guesses);
+        scanf("%d", &guess);
+        num_guesses++;
+
+        if (guess == number) {
+            printf("Congratulations %s, you guessed the secret number in %d guesses!\n", name, num_guesses);
+            if (num_guesses < high_score || high_score == 0) {
+                
+                high_score = num_guesses;
+                f = fopen("high_score.txt", "w");
+                fprintf(f, "%d", high_score);
+                fclose(f);
+                printf("You set a new high score!\n");
+            }
+            break;
+        } else if (guess < number) {
+            printf("Too low!\n");
+        } else {
+            printf("Too high!\n");
+        }
+    }
+
+    if (num_guesses == no_of_tries) {
+        printf("Sorry %s, you ran out of guesses. The secret number was %d.\n", name, number);
+    }
+
+    return 0;
+}
